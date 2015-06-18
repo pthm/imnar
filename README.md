@@ -1,4 +1,4 @@
-![node-recaptcha](http://imgur.com/7xGreb1)
+![node-recaptcha](http://i.imgur.com/7xGreb1.png)
 **A module for verifying ReCaptcha responses**
 
 Not tested, use at your own risk
