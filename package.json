@@ -1,0 +1,29 @@
+{
+  "name": "node-recaptcha",
+  "version": "1.0.0",
+  "description": "Node.js wrapper for ReCaptcha (Express middleware included)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pthm/node-recaptcha"
+  },
+  "keywords": [
+    "recaptcha",
+    "captcha",
+    "express",
+    "middleware"
+  ],
+  "author": "Patt-tom McDonnell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pthm/node-recaptcha/issues"
+  },
+  "homepage": "https://github.com/pthm/node-recaptcha",
+  "dependencies": {
+    "q": "^1.4.1",
+    "request": "^2.58.0"
+  }
+}
