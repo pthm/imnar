@@ -38,7 +38,31 @@ ReCaptcha.middleware = function(req, res, next){
   }
 };
 
-ReCaptcha.checkToken = function(options){
+ReCaptcha.prototype.check = function(token, ip){
+  var deferred = Q.defer();
+
+  if(!token){
+    deferred.reject(new Error('No token supplied'));
+  } else {
+    var options = {
+      response: token
+    };
+
+    if(ip){
+      options.remoteip = ip;
+    }
+
+    this.checkToken(options).then(function(response){
+      deferred.resolve(response);
+    }, function(response){
+      deferred.reject(response);
+    })
+  }
+
+  return deferred.promise;
+};
+
+ReCaptcha.prototype.checkToken = function(options){
   var data = {
     secret: this.secret,
     response: options.response

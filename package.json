@@ -1,6 +1,6 @@
 {
   "name": "imnar",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Node.js wrapper for ReCaptcha (Express middleware included)",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pthm/node-recaptcha"
+    "url": "https://github.com/pthm/imnar"
   },
   "keywords": [
     "recaptcha",

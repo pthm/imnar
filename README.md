@@ -1,5 +1,5 @@
-#IMNAR
-![node-recaptcha](http://i.imgur.com/7xGreb1.png)  
+#IMNAR 🙋
+![imnar](http://i.imgur.com/7xGreb1.png)  
 **A module for verifying ReCaptcha responses**
 
 Not tested, use at your own risk
@@ -8,6 +8,7 @@ Not tested, use at your own risk
 
 ##Usage
 
+Express / Connect  
 ````javascript
 var ReCaptcha = require('imnar');
 
@@ -20,4 +21,18 @@ app.use(ReCaptcha.middleware);
 
 ````
 
-Non middleware usage coming
+Standalone  
+````javascript
+var ReCaptcha = require('imnar');
+
+ReCaptcha({
+  secret: 'RECAPTCHA_SECRET_HERE',
+  sendIp: false
+})
+
+ReCaptcha.check('g-recaptcha-response').then(function(success){
+  console.log('Woohoo! captcha passed');
+}, function(error){
+  console.log('Uh oh! looks like you\'re a robot');
+})
+````
