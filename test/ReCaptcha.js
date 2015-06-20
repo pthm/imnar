@@ -1,32 +1,42 @@
 var ReCaptcha = require('../index');
 
-describe('ReCaptcha', function(){
+describe('ReCaptcha Errors', function(){
 
-  it('should throw an error if no secret is provided', function(done){
+  it('should throw an error is no secret is set', function(done){
     try{
-      ReCaptcha();
-    } catch(e) {
+      ReCaptcha.check('someToken')
+    } catch(e){
       done();
     }
   });
 
-  it('should not throw an error if a secret is provided', function(done){
-    try{
-      ReCaptcha({
-        secret: 'SECRET'
-      })
-    } catch (e) {
-      done(e);
-    }
+});
 
-    done();
-  });
+describe('ReCaptcha Config', function(){
 
   it('should be able to keep a secret', function(done){
-    if(ReCaptcha.secret() == 'SECRET'){
+    ReCaptcha({
+      secret: 'TEST'
+    });
+
+    if(ReCaptcha.secret() === 'TEST'){
       done();
     } else {
-      throw new Error('Couldn\'t keep a secret');
+      done(new Error('Couldn\'t keep a secret!'));
+    }
+  });
+
+  it('should be able to set other config values', function(done){
+    ReCaptcha({
+      secret: 'TEST',
+      sendIp: true,
+      endRequest: true
+    });
+
+    if(ReCaptcha.sendIp && ReCaptcha.endRequest()){
+      done();
+    } else {
+      done(new Error('Couldn\'t do config'));
     }
   });
 

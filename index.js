@@ -8,21 +8,19 @@ var options = {
 };
 
 var ReCaptcha = function(input){
-  if(!input.secret){
-    throw new Error('No ReCaptcha Secret (Please provide your API secret key)')
-  } else {
+  if(input && input.secret){
     options.secret = input.secret;
   }
 
-  if(input.sendIp){
+  if(input && input.sendIp){
     options.sendIp = true;
   }
 
-  if(input.endRequest){
+  if(input && input.endRequest){
     options.endRequest = true;
   }
 
-  if(input.secret){
+  if(input && input.secret){
     options.secret = input.secret;
   }
 
@@ -30,6 +28,11 @@ var ReCaptcha = function(input){
 };
 
 var checkToken = function(input){
+
+  if(!options.secret || options.secret == null){
+    throw new Error('No ReCaptcha Secret (Please provide your API secret key)');
+  }
+
   var data = {
     secret: options.secret,
     response: input.response
