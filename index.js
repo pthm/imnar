@@ -122,4 +122,12 @@ ReCaptcha.prototype.sendIp = function(input){
   return this.sendIp;
 };
 
+ReCaptcha.prototype.endRequest = function(input){
+  if(input){
+    this.endRequest = input;
+  }
+
+  return this.endRequest;
+};
+
 module.exports = ReCaptcha;
