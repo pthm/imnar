@@ -1,88 +1,40 @@
 var request = require('request');
 var Q = require('q');
 
-var ReCaptcha = function(options){
-  if(!options.secret){
-    throw new Error('No ReCaptcha Secret (Please provide your API secret key)')
-  } else {
-    this.secret = options.secret;
-  }
-
-  if(options.sendIp){
-    this.sendIp = true;
-  }
-
-  if(options.endRequest){
-    this.endRequest = true;
-  }
-
-  this.secret = options.secret;
-};
-
-ReCaptcha.prototype = {
-  secret: null,
+var options = {
+  secretKey: null,
   sendIp: false,
   endRequest: false
 };
 
-ReCaptcha.middleware = function(req, res, next){
-  if(!req.body['g-recaptcha-response'] || !req.body.recaptcha){
-    res.status(400).end();
+var ReCaptcha = function(input){
+  if(!input.secret){
+    throw new Error('No ReCaptcha Secret (Please provide your API secret key)')
   } else {
-    var options = {
-      response: req.body['g-recaptcha-response'] || req.body.recaptcha
-    };
+    options.secretKey = input.secret;
+  }
 
-    if(this.sendIp){
-      options.remoteip = req.ip;
-    }
+  if(input.sendIp){
+    options.sendIp = true;
+  }
 
-    this._checkToken(options).then(function(response){
-      req.recaptcha = response;
-      next();
-    }, function(response){
-      req.recaptcha = response;
-      if(this.endRequest){
-        res.status(400).end();
-      } else {
-        next();
-      }
-    })
+  if(input.endRequest){
+    options.endRequest = true;
+  }
+
+  if(input.secret){
+    options.secretKey = input.secret;
   }
 };
 
-ReCaptcha.prototype.check = function(token, ip){
-  var deferred = Q.defer();
-
-  if(!token){
-    deferred.reject(new Error('No token supplied'));
-  } else {
-    var options = {
-      response: token
-    };
-
-    if(ip){
-      options.remoteip = ip;
-    }
-
-    this._checkToken(options).then(function(response){
-      deferred.resolve(response);
-    }, function(response){
-      deferred.reject(response);
-    })
-  }
-
-  return deferred.promise;
-};
-
-ReCaptcha.prototype._checkToken = function(options){
+var checkToken = function(input){
   var data = {
-    secret: this.secret,
-    response: options.response
+    secret: options.secret,
+    response: input.response
   };
 
-  if(options.ip && this.sendIp){
-    data.remoteip = options.ip;
+  if(options.ip && options.sendIp){
+    data.remoteip = input.ip;
   }
 
   var deferred = Q.defer();
@@ -106,28 +58,76 @@ ReCaptcha.prototype._checkToken = function(options){
   return deferred.promise;
 };
 
-ReCaptcha.prototype.secret = function(input){
-  if(input){
-    this.secret = input;
-  }
+ReCaptcha.middleware = function(req, res, next){
+  if(!req.body['g-recaptcha-response'] || !req.body.recaptcha){
+    res.status(400).end();
+  } else {
+    var payload = {
+      response: req.body['g-recaptcha-response'] || req.body.recaptcha
+    };
 
-  return this.secret;
+    if(options.sendIp){
+      payload.remoteip = req.ip;
+    }
+
+    checkToken(payload).then(function(response){
+      req.recaptcha = response;
+      next();
+    }, function(response){
+      req.recaptcha = response;
+      if(this.endRequest){
+        res.status(400).end();
+      } else {
+        next();
+      }
+    })
+  }
 };
 
-ReCaptcha.prototype.sendIp = function(input){
-  if(input){
-    this.sendIp = input;
+
+ReCaptcha.check = function(token, ip){
+  var deferred = Q.defer();
+
+  if(!token){
+    deferred.reject(new Error('No token supplied'));
+  } else {
+    var payload = {
+      response: token
+    };
+
+    if(ip){
+      payload.remoteip = ip;
+    }
+
+    checkToken(payload).then(function(response){
+      deferred.resolve(response);
+    }, function(response){
+      deferred.reject(response);
+    })
   }
 
-  return this.sendIp;
+  return deferred.promise;
 };
 
-ReCaptcha.prototype.endRequest = function(input){
+ReCaptcha.secret = function(input){
   if(input){
-    this.endRequest = input;
+    options.secretKey = input;
   }
+  return options.secretKey;
+};
 
-  return this.endRequest;
+ReCaptcha.sendIp = function(input){
+  if(input){
+    options.sendIp = input;
+  }
+  return options.sendIp;
+};
+
+ReCaptcha.endRequest = function(input){
+  if(input){
+    options.endRequest = input;
+  }
+  return options.endRequest;
 };
 
 module.exports = ReCaptcha;
