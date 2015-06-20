@@ -1,4 +1,4 @@
-#IMNAR  
+#IMNAR ![Status](https://travis-ci.org/pthm/imnar.svg)  
 ![imnar](http://i.imgur.com/7xGreb1.png)  
 🙋**A module for verifying ReCaptcha responses**
 
