@@ -4,18 +4,25 @@ var Q = require('q');
 var ReCaptcha = function(options){
   if(!options.secret){
     throw new Error('No ReCaptcha Secret (Please provide your API secret key)')
+  } else {
+    this.secret = options.secret;
   }
 
   if(options.sendIp){
     this.sendIp = true;
   }
 
+  if(options.endRequest){
+    this.endRequest = true;
+  }
+
   this.secret = options.secret;
 };
 
 ReCaptcha.prototype = {
-  secret: '',
-  sendIp: false
+  secret: null,
+  sendIp: false,
+  endRequest: false
 };
 
 ReCaptcha.middleware = function(req, res, next){
@@ -30,10 +37,16 @@ ReCaptcha.middleware = function(req, res, next){
       options.remoteip = req.ip;
     }
 
-    this.checkToken(options).then(function(){
+    this._checkToken(options).then(function(response){
+      req.recaptcha = response;
       next();
-    }, function(){
-      res.status(400).end();
+    }, function(response){
+      req.recaptcha = response;
+      if(this.endRequest){
+        res.status(400).end();
+      } else {
+        next();
+      }
     })
   }
 };
@@ -52,7 +65,7 @@ ReCaptcha.prototype.check = function(token, ip){
       options.remoteip = ip;
     }
 
-    this.checkToken(options).then(function(response){
+    this._checkToken(options).then(function(response){
       deferred.resolve(response);
     }, function(response){
       deferred.reject(response);
@@ -62,7 +75,7 @@ ReCaptcha.prototype.check = function(token, ip){
   return deferred.promise;
 };
 
-ReCaptcha.prototype.checkToken = function(options){
+ReCaptcha.prototype._checkToken = function(options){
   var data = {
     secret: this.secret,
     response: options.response
@@ -75,18 +88,12 @@ ReCaptcha.prototype.checkToken = function(options){
   var deferred = Q.defer();
 
   var url = 'https://www.google.com/recaptcha/api/siteverify';
-  var options = {
-    method: 'post',
-    body: {form:data},
-    json: false,
-    url: url
-  };
 
   request.post(url, {form:data}, function (err, res, body) {
     body = JSON.parse(body);
 
     if(err){
-      deferred.reject();
+      deferred.reject(err);
     }
 
     if(body.success){
@@ -97,6 +104,22 @@ ReCaptcha.prototype.checkToken = function(options){
   });
 
   return deferred.promise;
+};
+
+ReCaptcha.prototype.secret = function(input){
+  if(input){
+    this.secret = input;
+  }
+
+  return this.secret;
+};
+
+ReCaptcha.prototype.sendIp = function(input){
+  if(input){
+    this.sendIp = input;
+  }
+
+  return this.sendIp;
 };
 
 module.exports = ReCaptcha;
