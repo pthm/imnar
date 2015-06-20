@@ -19,9 +19,9 @@
   "author": "Patt-tom McDonnell",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pthm/node-recaptcha/issues"
+    "url": "https://github.com/pthm/imnar/issues"
   },
-  "homepage": "https://github.com/pthm/node-recaptcha",
+  "homepage": "https://github.com/pthm/imnar",
   "dependencies": {
     "q": "^1.4.1",
     "request": "^2.58.0"
