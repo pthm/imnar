@@ -1,6 +1,6 @@
-#IMNAR 🙋
+#IMNAR
 ![imnar](http://i.imgur.com/7xGreb1.png)  
-**A module for verifying ReCaptcha responses**
+🙋**A module for verifying ReCaptcha responses**
 
 Not tested, use at your own risk
 
