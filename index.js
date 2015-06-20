@@ -25,6 +25,8 @@ var ReCaptcha = function(input){
   if(input.secret){
     options.secret = input.secret;
   }
+
+  return ReCaptcha;
 };
 
 var checkToken = function(input){
