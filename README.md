@@ -4,7 +4,7 @@
 
 Not tested, use at your own risk
 
-`npm install imnar`
+![imnar](https://nodei.co/npm/imnar.png)
 
 ##Usage
 
