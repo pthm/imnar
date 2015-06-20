@@ -2,7 +2,7 @@ var request = require('request');
 var Q = require('q');
 
 var options = {
-  secretKey: null,
+  secret: null,
   sendIp: false,
   endRequest: false
 };
@@ -11,7 +11,7 @@ var ReCaptcha = function(input){
   if(!input.secret){
     throw new Error('No ReCaptcha Secret (Please provide your API secret key)')
   } else {
-    options.secretKey = input.secret;
+    options.secret = input.secret;
   }
 
   if(input.sendIp){
@@ -23,7 +23,7 @@ var ReCaptcha = function(input){
   }
 
   if(input.secret){
-    options.secretKey = input.secret;
+    options.secret = input.secret;
   }
 };
 
@@ -111,9 +111,9 @@ ReCaptcha.check = function(token, ip){
 
 ReCaptcha.secret = function(input){
   if(input){
-    options.secretKey = input;
+    options.secret = input;
   }
-  return options.secretKey;
+  return options.secret;
 };
 
 ReCaptcha.sendIp = function(input){
