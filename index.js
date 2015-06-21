@@ -64,28 +64,36 @@ var checkToken = function(input){
 };
 
 ReCaptcha.middleware = function(req, res, next){
-  if(!req.body['g-recaptcha-response'] || !req.body.recaptcha){
-    res.status(400).end();
-  } else {
-    var payload = {
-      response: req.body['g-recaptcha-response'] || req.body.recaptcha
-    };
-
-    if(options.sendIp){
-      payload.remoteip = req.ip;
-    }
-
-    checkToken(payload).then(function(response){
-      req.recaptcha = response;
-      next();
-    }, function(response){
-      req.recaptcha = response;
-      if(this.endRequest){
+  if(req.hasOwnProperty('body')){
+    if(req.body['g-recaptcha-response'] == null){
+      if(options.endRequest){
         res.status(400).end();
       } else {
-        next();
+        req.recaptcha = {success: false};
+        next()
       }
-    })
+    } else {
+      var payload = {
+        response: req.body['g-recaptcha-response']
+      };
+      if(options.sendIp){
+        payload.remoteip = req.ip;
+      }
+      checkToken(payload).then(function(response){
+        req.recaptcha = response;
+        next();
+      }, function(response){
+        req.recaptcha = response;
+        if(options.endRequest){
+          res.status(400).end();
+        } else {
+          next();
+        }
+      })
+    }
+  } else {
+    req.recaptcha = {success: false};
+    next();
   }
 };
 

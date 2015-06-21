@@ -2,7 +2,7 @@
 ![imnar](http://i.imgur.com/7xGreb1.png)  
 🙋**A module for verifying ReCaptcha responses**
 
-Not tested, use at your own risk
+Not tested, use at your own risk  
 [![imnar](https://nodei.co/npm/imnar.png)](https://www.npmjs.com/package/imnar)
 
 ## Usage
