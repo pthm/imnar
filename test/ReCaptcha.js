@@ -1,4 +1,5 @@
 var ReCaptcha = require('../index');
+var nock = require('nock');
 
 describe('ReCaptcha Errors', function(){
 
@@ -39,5 +40,39 @@ describe('ReCaptcha Config', function(){
       done(new Error('Couldn\'t do config'));
     }
   });
+
+});
+
+describe('Standalone ReCaptcha Check', function(){
+
+  it('should return successfully', function(done){
+
+    var google = nock('https://www.google.com')
+      .post('/recaptcha/api/siteverify')
+      .reply(200, {
+        success: true
+      });
+
+    ReCaptcha.check('PASS').then(function(response){
+      done();
+    }, function(err){
+      done(new Error('Uncessful'))
+    })
+
+  });
+
+  it('should handle a failure', function(done){
+    var google = nock('https://www.google.com')
+      .post('/recaptcha/api/siteverify')
+      .reply(200, {
+        success: false
+      });
+
+    ReCaptcha.check('FAIL').then(function(response){
+      done(new Error('Did not fail'));
+    }, function(err){
+      done()
+    })
+  })
 
 });
