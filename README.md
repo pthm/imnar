@@ -39,3 +39,7 @@ ReCaptcha.check('g-recaptcha-response').then(function(success){
   console.log('Uh oh! looks like you\'re a robot');
 })
 ````
+
+## Options
+
+* **secret** Google ReCaptcha server secret
